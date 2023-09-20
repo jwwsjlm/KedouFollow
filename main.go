@@ -98,7 +98,7 @@ func handleMessage(kedou *kedouws.KeDou) {
 	//err := (ws, smg)
 }
 func main() {
-	N := 5 // 创建 N 个 KeDou 实例
+	N := 1 // 创建 N 个 KeDou 实例
 
 	// 创建一个切片来存储 KeDou 实例
 	keDouList := make([]*kedouws.KeDou, 0)
@@ -115,9 +115,6 @@ func main() {
 	}
 
 	fmt.Println("添加完毕")
+	select {}
 
-	// 等待所有 KeDou 实例执行完毕
-	for _, keDou := range keDouList {
-		keDou.Close()
-	}
 }

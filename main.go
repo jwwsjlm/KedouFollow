@@ -69,8 +69,8 @@ func handleMessage(kedou *kedouws.KeDou) {
 			Momentum: "0",
 			Name:     kedou.LocalName,
 			Sex:      randomNumber,
-			X:        "856",
-			Y:        "393.5",
+			X:        "0",
+			Y:        "0",
 			Icon:     "/images/default.png",
 		}
 		kedou.SendMessage(smg)
@@ -107,11 +107,14 @@ func main() {
 
 		name := utils.GenerateRandomName()
 		fmt.Println("开始循环")
-		keDou, _ := kedouws.NewKeDou("guanren", float64(10+i), float64(5+i), 3, name)
-		keDouList = append(keDouList, keDou)
+		keDou, err := kedouws.NewKeDou("混混", float64(10+i), float64(5+i), 3, name)
+		if err == nil {
+			keDouList = append(keDouList, keDou)
+			go keDouList[i].MessageCallback(handleMessage)
+		}
+
 		fmt.Println("本次name:", name)
 
-		go keDouList[i].MessageCallback(handleMessage)
 	}
 
 	fmt.Println("添加完毕")

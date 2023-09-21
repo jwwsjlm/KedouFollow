@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/websocket"
 	"kedou/config"
+	"sync"
 	"time"
 )
 
@@ -15,6 +16,7 @@ type KeDou struct {
 	XCoordinateOffset float64
 	YCoordinateOffset float64
 	HeartbeatTimer    int
+	mux               sync.Mutex
 }
 type MessageHandlerFunc func(w *KeDou)
 
@@ -76,5 +78,7 @@ func (k *KeDou) HeartbeatPacket() {
 
 }
 func (k *KeDou) SendMessage(t *config.Data) error {
+	k.mux.Lock()
+	defer k.mux.Unlock()
 	return k.Ws.WriteJSON(t)
 }

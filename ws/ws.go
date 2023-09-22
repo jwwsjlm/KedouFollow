@@ -29,16 +29,14 @@ func NewKeDou(Follow string, X float64, Y float64, timer int, Local string) (*Ke
 		return nil, err
 	}
 
-	k := KeDou{
+	return &KeDou{
 		Ws:                conn,
 		FollowName:        Follow,
 		XCoordinateOffset: X,
 		YCoordinateOffset: Y,
 		HeartbeatTimer:    timer,
 		LocalName:         Local,
-	}
-
-	return &k, nil
+	}, nil
 }
 
 func (k *KeDou) MessageCallback(handler MessageHandlerFunc) (config.Data, error) {

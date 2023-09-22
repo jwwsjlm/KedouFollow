@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gorilla/websocket"
 	"kedou/config"
 	"kedou/utils"
@@ -98,26 +97,15 @@ func handleMessage(kedou *kedouws.KeDou) {
 	//err := (ws, smg)
 }
 func main() {
-	N := 2 // 创建 N 个 KeDou 实例
 
-	// 创建一个切片来存储 KeDou 实例
-	keDouList := make([]*kedouws.KeDou, 0)
+	name := utils.GenerateRandomName()
 
-	for i := 0; i < N; i++ {
+	keDou, err := kedouws.NewKeDou("混混", float64(10), float64(5), 3, name)
+	if err == nil {
 
-		name := utils.GenerateRandomName()
-		fmt.Println("开始循环")
-		keDou, err := kedouws.NewKeDou("混混", float64(10+i), float64(5+i), 3, name)
-		if err == nil {
-			keDouList = append(keDouList, keDou)
-			go keDouList[i].MessageCallback(handleMessage)
-		}
-
-		fmt.Println("本次name:", name)
-
+		keDou.MessageCallback(handleMessage)
 	}
 
-	fmt.Println("添加完毕")
-	select {}
+	//	select {}
 
 }

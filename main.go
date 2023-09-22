@@ -5,7 +5,9 @@ import (
 	"kedou/config"
 	"kedou/utils"
 	kedouws "kedou/ws"
+	"math"
 	"math/rand"
+	"time"
 )
 
 func DataDistribution(ws *websocket.Conn, c config.Data) {
@@ -75,8 +77,10 @@ func handleMessage(kedou *kedouws.KeDou) {
 		kedou.SendMessage(smg)
 
 	case "update":
-		if kedou.WsData.Name == kedou.FollowName {
 
+		if kedou.WsData.Name == kedou.FollowName {
+			kedou.TargetX = kedou.WsData.X.(float64)
+			kedou.TargetY = kedou.WsData.Y.(float64)
 			randomNumber := rand.Intn(2)
 			smg := &config.Data{
 				Type:     "update",
@@ -96,16 +100,50 @@ func handleMessage(kedou *kedouws.KeDou) {
 
 	//err := (ws, smg)
 }
+func CircleAround(keDou *kedouws.KeDou) {
+
+	radius := 150.0       // 圆的半径
+	angle := 0.0          //旋转角度
+	angleIncrement := 3.0 // 每次更新的角度增量
+	for {
+		if keDou.WsData != nil {
+			radian := angle * (math.Pi / 180.0)
+
+			x := keDou.TargetX + radius*math.Cos(radian)
+			y := keDou.TargetY + radius*math.Sin(radian)
+			randomNumber := rand.Intn(2) //随机性别
+			smg := &config.Data{
+				Type:     "update",
+				Angle:    "5",
+				Momentum: "0",
+				Name:     keDou.LocalName,
+				Sex:      randomNumber,
+				X:        x,
+				Y:        y,
+				Icon:     "/images/default.png",
+			}
+			keDou.SendMessage(smg)
+
+			//fmt.Printf("Point: (%f, %f)\n", x, y)
+
+			angle += angleIncrement
+
+			time.Sleep(time.Millisecond * 10) // 控制每次更新的时间间隔
+		}
+
+	}
+}
 func main() {
 
 	name := utils.GenerateRandomName()
 
-	keDou, err := kedouws.NewKeDou("混混", float64(10), float64(5), 3, name)
+	keDou, err := kedouws.NewKeDou("guanren", float64(10), float64(5), 3, name)
 	if err == nil {
-
+		go CircleAround(keDou)
 		keDou.MessageCallback(handleMessage)
+
 	}
 
-	//	select {}
+	select {}
 
 }

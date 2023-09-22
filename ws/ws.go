@@ -13,6 +13,8 @@ type KeDou struct {
 	Ws                *websocket.Conn
 	LocalName         string
 	FollowName        string
+	TargetX           float64
+	TargetY           float64
 	XCoordinateOffset float64
 	YCoordinateOffset float64
 	HeartbeatTimer    int
